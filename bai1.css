@@ -1,0 +1,27 @@
+body {
+    background-color: antiquewhite;
+    font-family: Arial, Helvetica, sans-serif;
+    padding: 20px;
+    
+}
+.form {
+    margin-bottom: 20px;
+    
+}
+.form input{
+    margin: 5px;
+    padding: 5px;
+}
+
+#add{
+    margin-top: 10px;
+    padding: 5px 10px;
+}
+table{
+    width: 75%;
+    border-collapse: collapse;
+}
+th,td{
+    padding: 8px;
+    text-align: center;
+}
