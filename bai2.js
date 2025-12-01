@@ -3,6 +3,12 @@ const tableBody = document.getElementById("userTable");
 
 let stt = 1;
 
+
+window.onload = function () {
+    loadData();
+};
+
+
 addBtn.addEventListener("click", function () {
     const name = document.getElementById("username").value;
     const email = document.getElementById("email").value;
@@ -13,39 +19,62 @@ addBtn.addEventListener("click", function () {
     }
 
     
-    const row = document.createElement("tr");
-
-    row.innerHTML = `
-        <td>${stt}</td>
-        <td>${name}</td>
-        <td>${email}</td>
-        <td>
-            <button class="delete-btn">Xóa</button>
-        </td>
-    `;
+    let users = JSON.parse(localStorage.getItem("users")) || [];
 
     
-    tableBody.appendChild(row);
+    users.push({
+        name: name,
+        email: email
+    });
 
-    stt++;
+    
+    localStorage.setItem("users", JSON.stringify(users));
 
-   
-    row.querySelector(".delete-btn").onclick = function () {
-        row.remove();
-        reRenderSTT();
-    };
+    
+    loadData();
 
-  
+    
     document.getElementById("username").value = "";
     document.getElementById("email").value = "";
 });
 
-function reRenderSTT() {
-    const rows = tableBody.querySelectorAll("tr");
-    let num = 1;
-    rows.forEach(r => {
-        r.children[0].textContent = num;
-        num++;
+
+
+function loadData() {
+    tableBody.innerHTML = ""; 
+
+    let users = JSON.parse(localStorage.getItem("users")) || [];
+
+    stt = 1;
+
+    users.forEach((u, index) => {
+        const row = document.createElement("tr");
+
+        row.innerHTML = `
+            <td>${stt}</td>
+            <td>${u.name}</td>
+            <td>${u.email}</td>
+            <td>
+                <button class="delete-btn" onclick="deleteUser(${index})">Xóa</button>
+            </td>
+        `;
+
+        stt++;
+        tableBody.appendChild(row);
     });
-    stt = num;
+}
+
+
+
+function deleteUser(index) {
+    let users = JSON.parse(localStorage.getItem("users")) || [];
+
+    
+    users.splice(index, 1);
+
+    
+    localStorage.setItem("users", JSON.stringify(users));
+
+    
+    loadData();
 }

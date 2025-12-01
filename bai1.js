@@ -1,5 +1,11 @@
 let stt = 1;
 
+
+window.onload = function () {
+    loadData();
+};
+
+
 document.getElementById("add").addEventListener("click", function () {
     let name = document.getElementById("name").value;
     let price = document.getElementById("price").value;
@@ -9,52 +15,86 @@ document.getElementById("add").addEventListener("click", function () {
         return;
     }
 
-    let tableBody = document.querySelector("#protable tbody");
 
-    let row = document.createElement("tr");
+    let products = JSON.parse(localStorage.getItem("products")) || [];
 
-    
-    let cellStt = document.createElement("td");
-    cellStt.textContent = stt++;
 
-    let cellName = document.createElement("td");
-    cellName.textContent = name;
-
-    let cellPrice = document.createElement("td");
-    cellPrice.textContent = price;
-
-    let cellAction = document.createElement("td");
-    let deleteBtn = document.createElement("button");
-    deleteBtn.textContent = "Gone";
-
-   
-    deleteBtn.addEventListener("click", function () {
-        row.remove();
-        resetSTT(); 
+    products.push({
+        name: name,
+        price: price
     });
 
-    cellAction.appendChild(deleteBtn);
 
-    
-    row.appendChild(cellStt);
-    row.appendChild(cellName);
-    row.appendChild(cellPrice);
-    row.appendChild(cellAction);
+    localStorage.setItem("products", JSON.stringify(products));
 
-    
-    tableBody.appendChild(row);
 
-   
+    loadData();
+
+
     document.getElementById("name").value = "";
     document.getElementById("price").value = "";
 });
 
 
-function resetSTT() {
-    let rows = document.querySelectorAll("#protable tbody tr");
-    let num = 1;
-    rows.forEach(r => {
-        r.children[0].textContent = num++;
+
+
+
+function loadData() {
+    let tableBody = document.querySelector("#protable tbody");
+    tableBody.innerHTML = ""; 
+
+    let products = JSON.parse(localStorage.getItem("products")) || [];
+
+    stt = 1; 
+
+    products.forEach((p, index) => {
+        let row = document.createElement("tr");
+
+   
+        let cellStt = document.createElement("td");
+        cellStt.textContent = stt++;
+
+      
+        let cellName = document.createElement("td");
+        cellName.textContent = p.name;
+
+     
+        let cellPrice = document.createElement("td");
+        cellPrice.textContent = p.price;
+
+       
+        let cellAction = document.createElement("td");
+        let deleteBtn = document.createElement("button");
+        deleteBtn.textContent = "Gone";
+
+        deleteBtn.addEventListener("click", function () {
+            deleteProduct(index); 
+        });
+
+        cellAction.appendChild(deleteBtn);
+
+        
+        row.appendChild(cellStt);
+        row.appendChild(cellName);
+        row.appendChild(cellPrice);
+        row.appendChild(cellAction);
+
+        tableBody.appendChild(row);
     });
-    stt = num;
+}
+
+
+
+
+function deleteProduct(index) {
+    let products = JSON.parse(localStorage.getItem("products")) || [];
+
+    
+    products.splice(index, 1);
+
+    
+    localStorage.setItem("products", JSON.stringify(products));
+
+    
+    loadData();
 }
